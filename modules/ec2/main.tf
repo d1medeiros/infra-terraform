@@ -23,7 +23,7 @@ resource "aws_instance" "my_ec2_public" {
   key_name                    = var.key_name
   subnet_id                   = var.s_pub_id
   vpc_security_group_ids      = var.sg_pub_id
- /* provisioner "file" {
+  provisioner "file" {
     source      = "./${var.key_name}.pem"
     destination = "/home/ec2-user/${var.key_name}.pem"
     connection {
@@ -41,7 +41,7 @@ resource "aws_instance" "my_ec2_public" {
       private_key = file("${var.key_name}.pem")
       host        = self.public_ip
     }
-  }*/
+  }
   tags = {
     action = var.tag
   }
