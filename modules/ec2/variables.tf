@@ -15,10 +15,15 @@ variable "key_name" {
   type = string
 }
 
-variable "s_pub_id" {
+variable "subnet_id" {
   type = any
 }
 
-variable "sg_pub_id" {
+variable "vpc_security_group_ids" {
   type = list(string)
+}
+
+variable "associate_public_ip_address" {
+  type = bool
+  default = false
 }

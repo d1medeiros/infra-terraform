@@ -18,6 +18,17 @@ resource "aws_subnet" "my_subnet_public" {
   }
 }
 
+resource "aws_subnet" "my_subnet_private" {
+  vpc_id     = aws_vpc.my_vpc.id
+  cidr_block = var.subnet_cidr_private
+  availability_zone = var.availability_zone
+  map_public_ip_on_launch = false
+  depends_on = [aws_vpc.my_vpc]
+  tags = {
+    action = var.tag
+  }
+}
+
 resource "aws_security_group" "my_security_group_public" {
   name        = "allow_tls_public"
   description = "Allow TLS inbound traffic"
@@ -54,10 +65,24 @@ resource "aws_route_table" "my_route_table" {
   }
 }
 
+resource "aws_route_table" "my_route_table_private" {
+  vpc_id = aws_vpc.my_vpc.id
+  depends_on = [aws_vpc.my_vpc]
+  tags = {
+    action = var.tag
+  }
+}
+
 resource "aws_route_table_association" "my_rt_association_public" {
   route_table_id = aws_route_table.my_route_table.id
   subnet_id = aws_subnet.my_subnet_public.id
   depends_on = [aws_route_table.my_route_table, aws_subnet.my_subnet_public]
+}
+
+resource "aws_route_table_association" "my_rt_association_private" {
+  route_table_id = aws_route_table.my_route_table_private.id
+  subnet_id = aws_subnet.my_subnet_private.id
+  depends_on = [aws_route_table.my_route_table, aws_subnet.my_subnet_private]
 }
 
 resource "aws_internet_gateway" "my_internet_gateway" {
